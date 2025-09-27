@@ -58,6 +58,7 @@ export default function Classes() {
 
   return (
     <section
+      id="classes"
       ref={sectionRef}
       className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden"
     >

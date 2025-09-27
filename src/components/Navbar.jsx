@@ -4,13 +4,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu, FiX } from 'react-icons/fi';
 
 const navLinks = [
-  { to: 'hero', label: 'Home' },
-  { to: 'about', label: 'About' },
-  { to: 'classes', label: 'Classes' },
-  { to: 'trainers', label: 'Trainers' },
-  { to: 'gallery', label: 'Gallery' },
-  { to: 'testimonials', label: 'Testimonials' },
-  { to: 'contact', label: 'Contact' },
+  { to: 'hero', label: 'Home', id: 'hero' },
+  { to: 'about', label: 'About', id: 'about' },
+  { to: 'classes', label: 'Classes', id: 'classes' },
+  { to: 'trainers', label: 'Trainers', id: 'trainers' },
+  { to: 'gallery', label: 'Gallery', id: 'gallery' },
+  { to: 'testimonials', label: 'Testimonials', id: 'testimonials' },
+  { to: 'contact', label: 'Contact', id: 'contact' },
 ];
 
 const Navbar = () => {

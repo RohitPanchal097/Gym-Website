@@ -58,6 +58,7 @@ export default function Gallery() {
 
   return (
     <section
+      id="gallery"
       ref={sectionRef}
       className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden"
     >

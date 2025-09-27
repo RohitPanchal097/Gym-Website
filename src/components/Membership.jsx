@@ -64,7 +64,7 @@ export default function Membership() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden py-20">
+    <section id="membership"  ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden py-20">
       <img src={bgImg} alt="Membership" className="absolute inset-0 w-full h-full object-cover opacity-70 scale-105" style={{ zIndex: 1 }} />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent z-10" />
       <div className="relative z-20 w-full max-w-5xl mx-auto px-4">
