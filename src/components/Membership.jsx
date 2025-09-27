@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import QRPopup from "./QRPopup";
 gsap.registerPlugin(ScrollTrigger);
 
 const plans = [
@@ -30,6 +31,7 @@ export default function Membership() {
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
   const gridRef = useRef(null);
+  const [isQRPopupOpen, setIsQRPopupOpen] = useState(false);
 
   useEffect(() => {
     gsap.fromTo(
@@ -63,6 +65,10 @@ export default function Membership() {
     );
   }, []);
 
+  const handleJoinNow = () => {
+    setIsQRPopupOpen(true);
+  };
+
   return (
     <section id="membership"  ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden py-20">
       <img src={bgImg} alt="Membership" className="absolute inset-0 w-full h-full object-cover opacity-70 scale-105" style={{ zIndex: 1 }} />
@@ -82,11 +88,19 @@ export default function Membership() {
                   <li key={f} className="text-base opacity-90">{f}</li>
                 ))}
               </ul>
-              <button className="px-6 py-3 bg-pink-600 hover:bg-pink-700 rounded-full text-lg font-bold shadow-lg transition-all duration-300 text-white">Join Now</button>
+              <button 
+              onClick={handleJoinNow}
+              className="px-6 py-3 bg-pink-600 hover:bg-pink-700 rounded-full text-lg font-bold shadow-lg transition-all duration-300 text-white">Join Now</button>
             </div>
           ))}
         </div>
       </div>
+      
+      {/* QR Code Popup */}
+      <QRPopup 
+        isOpen={isQRPopupOpen} 
+        onClose={() => setIsQRPopupOpen(false)} 
+      />
     </section>
   );
 } 
