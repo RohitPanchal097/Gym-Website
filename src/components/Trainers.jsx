@@ -61,17 +61,18 @@ export default function Trainers() {
       id="trainers"
       ref={sectionRef}
       className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden"
+      aria-labelledby="trainers-heading"
     >
       <img
         ref={bgRef}
         src={trainersImg}
-        alt="Our Trainers"
+        alt="Professional fitness trainers posing"
         className="absolute inset-0 w-full h-full object-cover opacity-80 scale-105"
         style={{ zIndex: 1 }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent z-10" />
       <div className="relative z-20 text-center text-white px-4">
-        <h2 ref={headingRef} className="text-4xl md:text-6xl font-extrabold drop-shadow-lg tracking-tight">
+        <h2 ref={headingRef} id="trainers-heading" className="text-4xl md:text-6xl font-extrabold drop-shadow-lg tracking-tight">
           Meet Our <span className="text-pink-500">Trainers</span>
         </h2>
         <p ref={paraRef} className="mt-6 text-lg md:text-2xl font-medium max-w-2xl mx-auto">

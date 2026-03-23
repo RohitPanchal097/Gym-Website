@@ -62,19 +62,37 @@ export default function FAQ() {
   }, []);
 
   return (
-    <section id="faq" ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden py-20">
-      <img src={bgImg} alt="FAQ" className="absolute inset-0 w-full h-full object-cover opacity-70 scale-105" style={{ zIndex: 1 }} />
+    <section 
+      id="faq" 
+      ref={sectionRef} 
+      className="relative min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden py-20"
+      aria-labelledby="faq-heading"
+    >
+      <img 
+        src={bgImg} 
+        alt="FAQ - Gym facilities for frequently asked questions" 
+        className="absolute inset-0 w-full h-full object-cover opacity-70 scale-105" 
+        style={{ zIndex: 1 }} 
+      />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent z-10" />
       <div className="relative z-20 w-full max-w-3xl mx-auto px-4">
-        <h2 ref={headingRef} className="text-4xl md:text-6xl font-extrabold drop-shadow-lg tracking-tight text-center text-white mb-12">
+        <h2 
+          ref={headingRef} 
+          id="faq-heading"
+          className="text-4xl md:text-6xl font-extrabold drop-shadow-lg tracking-tight text-center text-white mb-12"
+        >
           <span className="text-pink-500">FAQ</span>
         </h2>
-        <div ref={listRef} className="space-y-8">
+        <div ref={listRef} className="space-y-8" role="list">
           {faqs.map((faq, i) => (
-            <div key={i} className="bg-black/70 rounded-xl shadow-xl p-6 text-white">
+            <article 
+              key={i} 
+              className="bg-black/70 rounded-xl shadow-xl p-6 text-white hover:shadow-2xl transition-shadow duration-300 focus-within:ring-2 focus-within:ring-pink-500"
+              role="listitem"
+            >
               <h3 className="text-xl font-bold mb-2 text-pink-400">{faq.q}</h3>
               <p className="text-base opacity-90">{faq.a}</p>
-            </div>
+            </article>
           ))}
         </div>
       </div>

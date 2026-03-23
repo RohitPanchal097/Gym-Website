@@ -14,10 +14,6 @@ export default function Hero() {
   const buttonRef = useRef(null);
 
   useEffect(() => {
-    console.log("GSAP useEffect running in Hero");
-    if (headingRef.current) {
-      headingRef.current.style.color = "magenta";
-    }
     // Parallax background
     gsap.to(bgRef.current, {
       yPercent: 20,
@@ -76,28 +72,48 @@ export default function Hero() {
     );
   }, []);
 
+  const handleScrollToClasses = () => {
+    const classesSection = document.getElementById('classes');
+    if (classesSection) {
+      classesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section
       id="hero"
       ref={sectionRef}
       className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden"
+      aria-labelledby="hero-heading"
     >
       <img
         ref={bgRef}
         src={heroImg}
-        alt="Gym Hero"
+        alt="Gym equipment and training environment"
         className="absolute inset-0 w-full h-full object-cover opacity-80 scale-105"
         style={{ zIndex: 1 }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent z-10" />
       <div className="relative z-20 text-center text-white px-4">
-        <h1 ref={headingRef} className="text-5xl md:text-7xl font-extrabold drop-shadow-lg tracking-tight">
+        <h1 
+          ref={headingRef} 
+          id="hero-heading"
+          className="text-5xl md:text-7xl font-extrabold drop-shadow-lg tracking-tight"
+        >
           Unleash Your <span className="text-pink-500">Power</span>
         </h1>
-        <p ref={paraRef} className="mt-6 text-xl md:text-2xl font-medium max-w-2xl mx-auto">
+        <p 
+          ref={paraRef} 
+          className="mt-6 text-xl md:text-2xl font-medium max-w-2xl mx-auto"
+        >
           Join the most <span className="text-pink-400">dynamic</span> gym in the city. Train with the best, become your best.
         </p>
-        <button ref={buttonRef} className="mt-10 px-8 py-4 bg-pink-600 hover:bg-pink-700 rounded-full text-lg font-bold shadow-lg transition-all duration-300">
+        <button 
+          ref={buttonRef} 
+          onClick={handleScrollToClasses}
+          className="mt-10 px-8 py-4 bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-full text-lg font-bold shadow-lg transition-all duration-300 min-h-12"
+          aria-label="Scroll to classes section"
+        >
           Get Started
         </button>
       </div>

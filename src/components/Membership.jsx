@@ -70,28 +70,63 @@ export default function Membership() {
   };
 
   return (
-    <section id="membership"  ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden py-20">
-      <img src={bgImg} alt="Membership" className="absolute inset-0 w-full h-full object-cover opacity-70 scale-105" style={{ zIndex: 1 }} />
+    <section 
+      id="membership"  
+      ref={sectionRef} 
+      className="relative min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden py-20"
+      aria-labelledby="membership-heading"
+    >
+      <img 
+        src={bgImg} 
+        alt="Membership plans - Gym facilities" 
+        className="absolute inset-0 w-full h-full object-cover opacity-70 scale-105" 
+        style={{ zIndex: 1 }} 
+      />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent z-10" />
       <div className="relative z-20 w-full max-w-5xl mx-auto px-4">
-        <h2 ref={headingRef} className="text-4xl md:text-6xl font-extrabold drop-shadow-lg tracking-tight text-center text-white mb-12">
+        <h2 
+          ref={headingRef} 
+          id="membership-heading"
+          className="text-4xl md:text-6xl font-extrabold drop-shadow-lg tracking-tight text-center text-white mb-12"
+        >
           <span className="text-pink-500">Membership</span> Plans
         </h2>
-        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div 
+          ref={gridRef} 
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          role="list"
+        >
           {plans.map((plan) => (
-            <div key={plan.title} className="bg-black/70 rounded-xl shadow-xl p-8 flex flex-col items-center text-center text-white border-2 border-pink-500/30 hover:border-pink-500 transition-all">
-              <img src={plan.img} alt={plan.title} className="w-28 h-28 object-cover rounded-full mb-4 shadow-lg border-4 border-pink-500/40" />
+            <article 
+              key={plan.title} 
+              className="bg-black/70 rounded-xl shadow-xl p-8 flex flex-col items-center text-center text-white border-2 border-pink-500/30 hover:border-pink-500 transition-all focus-within:ring-2 focus-within:ring-yellow-400"
+              role="listitem"
+            >
+              <img 
+                src={plan.img} 
+                alt={`${plan.title} membership plan`}
+                className="w-28 h-28 object-cover rounded-full mb-4 shadow-lg border-4 border-pink-500/40" 
+              />
               <h3 className="text-2xl font-bold mb-2">{plan.title}</h3>
-              <div className="text-3xl font-extrabold text-pink-400 mb-4">{plan.price}</div>
-              <ul className="mb-6 space-y-2">
-                {plan.features.map((f) => (
-                  <li key={f} className="text-base opacity-90">{f}</li>
+              <div className="text-3xl font-extrabold text-pink-400 mb-4" aria-label={`Price ${plan.price}`}>
+                {plan.price}
+              </div>
+              <ul className="mb-6 space-y-2 text-left w-full">
+                {plan.features.map((f, idx) => (
+                  <li key={idx} className="text-base opacity-90 flex items-start">
+                    <span className="text-pink-400 mr-2" aria-hidden="true">✓</span>
+                    <span>{f}</span>
+                  </li>
                 ))}
               </ul>
               <button 
-              onClick={handleJoinNow}
-              className="px-6 py-3 bg-pink-600 hover:bg-pink-700 rounded-full text-lg font-bold shadow-lg transition-all duration-300 text-white">Join Now</button>
-            </div>
+                onClick={handleJoinNow}
+                className="px-6 py-3 bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-full text-lg font-bold shadow-lg transition-all duration-300 text-white min-h-12 w-full"
+                aria-label={`Join ${plan.title} membership plan`}
+              >
+                Join Now
+              </button>
+            </article>
           ))}
         </div>
       </div>

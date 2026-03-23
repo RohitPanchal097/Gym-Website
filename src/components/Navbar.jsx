@@ -17,51 +17,86 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState('hero');
 
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
+  const handleMenuItemClick = (linkId) => {
+    setActive(linkId);
+    setMenuOpen(false);
+  };
+
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-black/40 backdrop-blur-md shadow-lg">
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-        <div className="text-2xl font-extrabold text-yellow-400 tracking-widest drop-shadow-lg cursor-pointer select-none">
+    <header className="fixed top-0 left-0 w-full z-50 bg-black/40 backdrop-blur-md shadow-lg">
+      <nav 
+        className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4"
+        role="navigation"
+        aria-label="Main navigation"
+      >
+        {/* Logo */}
+        <div 
+          className="text-2xl font-extrabold text-yellow-400 tracking-widest drop-shadow-lg cursor-pointer select-none"
+          role="banner"
+        >
           GYM X
         </div>
-        {/* Desktop Nav */}
+
+        {/* Desktop Navigation */}
         <div className="hidden md:flex gap-8 items-center">
-          {navLinks.map((link) => (
-            <ScrollLink
-              key={link.to}
-              to={link.to}
-              spy={true}
-              smooth={true}
-              offset={-80}
-              duration={500}
-              onSetActive={() => setActive(link.to)}
-              className={`relative cursor-pointer px-2 py-1 text-lg font-semibold transition text-white hover:text-yellow-400 ${active === link.to ? 'text-yellow-400' : ''}`}
-            >
-              {active === link.to && (
-                <motion.span
-                  layoutId="nav-underline"
-                  className="absolute left-0 -bottom-1 w-full h-1 bg-yellow-400 rounded"
-                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                />
-              )}
-              {link.label}
-            </ScrollLink>
-          ))}
+          <ul className="flex gap-8">
+            {navLinks.map((link) => (
+              <li key={link.to}>
+                <ScrollLink
+                  to={link.to}
+                  spy={true}
+                  smooth={true}
+                  offset={-80}
+                  duration={500}
+                  onSetActive={() => setActive(link.to)}
+                  className={`relative cursor-pointer px-2 py-1 text-lg font-semibold transition text-white hover:text-yellow-400 focus:outline-none ${active === link.to ? 'text-yellow-400' : ''}`}
+                  role="menuitem"
+                  tabIndex="0"
+                  aria-current={active === link.to ? 'page' : undefined}
+                >
+                  {active === link.to && (
+                    <motion.span
+                      layoutId="nav-underline"
+                      className="absolute left-0 -bottom-1 w-full h-1 bg-yellow-400 rounded"
+                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                      aria-hidden="true"
+                    />
+                  )}
+                  {link.label}
+                </ScrollLink>
+              </li>
+            ))}
+          </ul>
         </div>
-        {/* Mobile Hamburger */}
+
+        {/* Mobile Hamburger Menu Button */}
         <div className="md:hidden flex items-center">
-          <button onClick={() => setMenuOpen((v) => !v)} className="text-yellow-400 text-3xl focus:outline-none">
+          <button 
+            onClick={toggleMenu}
+            className="mobile-menu-btn text-yellow-400 text-3xl"
+            aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+          >
             {menuOpen ? <FiX /> : <FiMenu />}
           </button>
         </div>
-      </div>
+      </nav>
+
       {/* Mobile Menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
+            id="mobile-menu"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             className="md:hidden bg-black/90 backdrop-blur-md px-6 py-4 flex flex-col gap-4"
+            role="menu"
           >
             {navLinks.map((link) => (
               <ScrollLink
@@ -71,8 +106,11 @@ const Navbar = () => {
                 smooth={true}
                 offset={-80}
                 duration={500}
-                onSetActive={() => { setActive(link.to); setMenuOpen(false); }}
-                className={`text-lg font-semibold text-white hover:text-yellow-400 transition cursor-pointer ${active === link.to ? 'text-yellow-400' : ''}`}
+                onSetActive={() => handleMenuItemClick(link.to)}
+                className={`text-lg font-semibold text-white hover:text-yellow-400 transition cursor-pointer focus:outline-none ${active === link.to ? 'text-yellow-400' : ''}`}
+                role="menuitem"
+                tabIndex="0"
+                aria-current={active === link.to ? 'page' : undefined}
               >
                 {link.label}
               </ScrollLink>
@@ -80,7 +118,7 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </header>
   );
 };
 

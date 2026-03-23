@@ -16,20 +16,31 @@ import useLenis from './useLenis';
 function App() {
   useLenis();
   return (
-    <div className="bg-gradient-to-br from-[#0f2027] to-[#2c5364] min-h-screen w-full overflow-x-hidden">
-      <Navbar />
-      <Hero />
-      <About />
-      <Classes />
-      <Trainers />
-      <Gallery />
-      <Facilities />
-      <Membership />
-      <FAQ />
-      <Testimonials />
-      <Contact />
-      <Footer />
-    </div>
+    <>
+      {/* Skip to main content link for keyboard users and screen readers */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+      
+      <div className="bg-gradient-to-br from-[#0f2027] to-[#2c5364] min-h-screen w-full overflow-x-hidden">
+        <Navbar />
+        
+        <main id="main-content" role="main">
+          <Hero />
+          <About />
+          <Classes />
+          <Trainers />
+          <Gallery />
+          <Facilities />
+          <Membership />
+          <FAQ />
+          <Testimonials />
+          <Contact />
+        </main>
+        
+        <Footer />
+      </div>
+    </>
   );
 }
 

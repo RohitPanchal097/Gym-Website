@@ -11,14 +11,17 @@ export default function Contact() {
   const bgRef = useRef(null);
   const headingRef = useRef(null);
   const formRef = useRef(null);
+  const statusRef = useRef(null);
   
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     message: ''
   });
+  const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('');
+  const [statusType, setStatusType] = useState(''); // 'error' or 'success'
 
   useEffect(() => {
     // Parallax background
@@ -70,24 +73,50 @@ export default function Contact() {
       ...prev,
       [name]: value
     }));
+    // Clear error for this field when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required';
+    }
+
+    return newErrors;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Basic validation
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      setSubmitStatus('Please fill in all fields');
-      return;
-    }
-
-    if (!formData.email.includes('@')) {
-      setSubmitStatus('Please enter a valid email address');
+    const newErrors = validateForm();
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setSubmitStatus('Please correct the errors below');
+      setStatusType('error');
       return;
     }
 
     setIsSubmitting(true);
     setSubmitStatus('');
+    setStatusType('');
 
     // Create mailto link
     const subject = `Contact Form Message from ${formData.name}`;
@@ -101,8 +130,14 @@ export default function Contact() {
     // Reset form after a short delay
     setTimeout(() => {
       setFormData({ name: '', email: '', message: '' });
+      setErrors({});
       setIsSubmitting(false);
       setSubmitStatus('Email client opened! Please send your message.');
+      setStatusType('success');
+      // Announce to screen readers
+      if (statusRef.current) {
+        statusRef.current.focus();
+      }
     }, 1000);
   };
 
@@ -115,7 +150,7 @@ export default function Contact() {
       <img
         ref={bgRef}
         src={contactImg}
-        alt="Contact"
+        alt="Contact Us - Gym Background"
         className="absolute inset-0 w-full h-full object-cover opacity-80 scale-105"
         style={{ zIndex: 1 }}
       />
@@ -124,52 +159,116 @@ export default function Contact() {
         <h2 ref={headingRef} className="text-4xl md:text-6xl font-extrabold drop-shadow-lg tracking-tight mb-8">
           <span className="text-pink-500">Contact</span> Us
         </h2>
-        <form ref={formRef} onSubmit={handleSubmit} className="bg-black/70 rounded-lg p-8 flex flex-col gap-4 shadow-xl">
-          <input 
-            type="text" 
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            placeholder="Your Name" 
-            className="p-3 rounded bg-white/80 text-black placeholder-gray-600 focus:outline-pink-500" 
-            required
-          />
-          <input 
-            type="email" 
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            placeholder="Your Email" 
-            className="p-3 rounded bg-white/80 text-black placeholder-gray-600 focus:outline-pink-500" 
-            required
-          />
-          <textarea 
-            name="message"
-            value={formData.message}
-            onChange={handleInputChange}
-            placeholder="Your Message" 
-            className="p-3 rounded bg-white/80 text-black placeholder-gray-600 focus:outline-pink-500" 
-            rows={4}
-            required
-          />
-          
-          {/* Status Message */}
-          {submitStatus && (
-            <div className={`text-center text-sm font-medium ${
-              submitStatus.includes('opened') ? 'text-green-400' : 'text-red-400'
-            }`}>
-              {submitStatus}
-            </div>
-          )}
+        
+        {/* Status Message with ARIA live region */}
+        {submitStatus && (
+          <div 
+            ref={statusRef}
+            role="alert"
+            aria-live="polite"
+            aria-atomic="true"
+            tabIndex="-1"
+            className={`mb-4 p-4 rounded-lg text-center font-medium ${
+              statusType === 'error' 
+                ? 'bg-red-500/20 text-red-300 border border-red-400' 
+                : 'bg-green-500/20 text-green-300 border border-green-400'
+            }`}
+          >
+            {submitStatus}
+          </div>
+        )}
+
+        <form 
+          ref={formRef} 
+          onSubmit={handleSubmit} 
+          className="bg-black/70 rounded-lg p-8 flex flex-col gap-4 shadow-xl"
+          noValidate
+          aria-label="Contact form"
+        >
+          {/* Name Field */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="contact-name" className="text-white font-semibold text-left">
+              Name <span className="text-red-400" aria-label="required">*</span>
+            </label>
+            <input 
+              id="contact-name"
+              type="text" 
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              placeholder="Enter your full name" 
+              className={`p-3 rounded bg-white/80 text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500 ${
+                errors.name ? 'ring-2 ring-red-500' : ''
+              }`}
+              aria-describedby={errors.name ? "name-error" : undefined}
+              required
+            />
+            {errors.name && (
+              <div id="name-error" className="error-message text-red-400 text-sm font-medium">
+                {errors.name}
+              </div>
+            )}
+          </div>
+
+          {/* Email Field */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="contact-email" className="text-white font-semibold text-left">
+              Email <span className="text-red-400" aria-label="required">*</span>
+            </label>
+            <input 
+              id="contact-email"
+              type="email" 
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="Enter your email address" 
+              className={`p-3 rounded bg-white/80 text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500 ${
+                errors.email ? 'ring-2 ring-red-500' : ''
+              }`}
+              aria-describedby={errors.email ? "email-error" : undefined}
+              required
+            />
+            {errors.email && (
+              <div id="email-error" className="error-message text-red-400 text-sm font-medium">
+                {errors.email}
+              </div>
+            )}
+          </div>
+
+          {/* Message Field */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="contact-message" className="text-white font-semibold text-left">
+              Message <span className="text-red-400" aria-label="required">*</span>
+            </label>
+            <textarea 
+              id="contact-message"
+              name="message"
+              value={formData.message}
+              onChange={handleInputChange}
+              placeholder="Enter your message" 
+              className={`p-3 rounded bg-white/80 text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500 resize-none ${
+                errors.message ? 'ring-2 ring-red-500' : ''
+              }`}
+              rows={4}
+              aria-describedby={errors.message ? "message-error" : undefined}
+              required
+            />
+            {errors.message && (
+              <div id="message-error" className="error-message text-red-400 text-sm font-medium">
+                {errors.message}
+              </div>
+            )}
+          </div>
           
           <button 
             type="submit" 
             disabled={isSubmitting}
-            className={`mt-4 px-6 py-3 rounded-full text-lg font-bold shadow-lg transition-all duration-300 text-white ${
+            className={`mt-4 px-6 py-3 rounded-full text-lg font-bold shadow-lg transition-all duration-300 text-white min-h-12 ${
               isSubmitting 
-                ? 'bg-gray-500 cursor-not-allowed' 
-                : 'bg-pink-600 hover:bg-pink-700'
+                ? 'bg-gray-500 cursor-not-allowed opacity-60' 
+                : 'bg-pink-600 hover:bg-pink-700 focus:outline-pink-500'
             }`}
+            aria-busy={isSubmitting}
           >
             {isSubmitting ? 'Opening Email...' : 'Send Message'}
           </button>

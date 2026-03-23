@@ -66,20 +66,46 @@ export default function Facilities() {
   }, []);
 
   return (
-    <section id="facilities" ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden py-20">
-      <img src={bgImg} alt="Facilities" className="absolute inset-0 w-full h-full object-cover opacity-70 scale-105" style={{ zIndex: 1 }} />
+    <section 
+      id="facilities" 
+      ref={sectionRef} 
+      className="relative min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden py-20"
+      aria-labelledby="facilities-heading"
+    >
+      <img 
+        src={bgImg} 
+        alt="Gym facilities and equipment" 
+        className="absolute inset-0 w-full h-full object-cover opacity-70 scale-105" 
+        style={{ zIndex: 1 }} 
+      />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent z-10" />
       <div className="relative z-20 w-full max-w-6xl mx-auto px-4">
-        <h2 ref={headingRef} className="text-4xl md:text-6xl font-extrabold drop-shadow-lg tracking-tight text-center text-white mb-12">
+        <h2 
+          ref={headingRef} 
+          id="facilities-heading"
+          className="text-4xl md:text-6xl font-extrabold drop-shadow-lg tracking-tight text-center text-white mb-12"
+        >
           Our <span className="text-pink-500">Facilities</span>
         </h2>
-        <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+        <div 
+          ref={gridRef} 
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8"
+          role="list"
+        >
           {facilities.map((f) => (
-            <div key={f.title} className="bg-black/70 rounded-xl shadow-xl p-6 flex flex-col items-center text-center text-white">
-              <img src={f.img} alt={f.title} className="w-32 h-32 object-cover rounded-lg mb-4 shadow-lg" />
+            <article 
+              key={f.title} 
+              className="bg-black/70 rounded-xl shadow-xl p-6 flex flex-col items-center text-center text-white hover:shadow-2xl transition-shadow duration-300 focus-within:ring-2 focus-within:ring-pink-500"
+              role="listitem"
+            >
+              <img 
+                src={f.img} 
+                alt={`${f.title} - ${f.desc}`}
+                className="w-32 h-32 object-cover rounded-lg mb-4 shadow-lg" 
+              />
               <h3 className="text-xl font-bold mb-2">{f.title}</h3>
               <p className="text-base opacity-80">{f.desc}</p>
-            </div>
+            </article>
           ))}
         </div>
       </div>
